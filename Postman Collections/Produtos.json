@@ -1,0 +1,333 @@
+{
+	"info": {
+		"_postman_id": "a256e5a8-face-4ffb-9fbf-e47e9942b1fb",
+		"name": "Test Server Rest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Produto",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f29d9234-da99-42a6-b628-99b17b2837e1",
+								"exec": [
+									"const resposta = pm.response.json();\r",
+									"pm.globals.set(\"token\", resposta.authorization);\r",
+									"\r",
+									"pm.test(\"Status code é 200, tem corpo e é Json\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Validar mensagem de sucesso\", () => {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Login realizado com sucesso\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "14b15649-1695-4cba-844f-c27a2e1521be",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"jaime@qa.com.br\",\r\n  \"password\": \"teste\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Produtos",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b09c700d-5729-409a-8963-000adc0344aa",
+								"exec": [
+									"pm.test(\"Validar produto da lista\", () => {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Samsung 60 polegadas\");\r",
+									"});\r",
+									"pm.test(\"Status code é 200, tem corpo e é Json\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Checando as propriedas do produto\", () => { \r",
+									"    const jsonData = pm.response.json();   \r",
+									"    pm.expect(jsonData.produtos).to.be.an(\"array\");\r",
+									"    pm.expect(jsonData.produtos[0]).to.have.keys('nome','preco', 'descricao', 'quantidade', '_id');\r",
+									"    \r",
+									"});\r",
+									"//  pm.test(\"Nome do produto e valor\", () => {\r",
+									"//     const resposta = pm.resposta.json();\r",
+									"//     pm.expect(resposta.nome).to.eql(\"Logitech MX Vertical\");\r",
+									"//     pm.expect(resposta.preco).to.eql(470);\r",
+									"//  });\r",
+									"//  pm.test(\"Validando mouse\"), () => {\r",
+									"//      const teste = pm.teste.json();\r",
+									"//      pm.expect(teste.descricao).to.eql(\"Pinsons\")\r",
+									"//  };\r",
+									"//  pm.test(\"Validando quantidade do produto Samsung\"), () => {\r",
+									"//     const quantidade = pm.quantidade.json();\r",
+									"//     pm.expect(quantidade.descricao).to.eql(\"Pau mole\");\r",
+									"//     pm.expect(quantidade.quantidade).to.eql(470)\r",
+									"//  };\r",
+									"\r",
+									"// pm.test(\"Status code name has string\", () => {\r",
+									"//     pm.response.to.have.status(\"Created\");\r",
+									"// });"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "77a49c22-6fde-4b2b-806c-82a0fc6bff78",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": "{{local}}/produtos"
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar Produto",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "2d7b2b58-de03-4149-91a9-d9db3a501d63",
+								"exec": [
+									"\r",
+									"pm.environment.set(\"produto\", pm.variables.replaceIn('{{$randomProduct}}'));\r",
+									"pm.environment.set(\"descricao\", pm.variables.replaceIn('{{$randomLoremSentence}}'));\r",
+									"pm.environment.set(\"preco\", Math.floor(Math.random() * (200 * 1) + 1));\r",
+									"pm.environment.set(\"quantidade\", Math.floor(Math.random() * (50 * 1) + 5));\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "7c932f11-721e-4618-ac1d-9868f8251548",
+								"exec": [
+									"const resposta = pm.response.json();\r",
+									"pm.globals.set(\"id_produto\", resposta._id);\r",
+									" pm.test(\"Status code é 200, tem corpo e é Json\", () => {\r",
+									"    pm.response.to.have.status(201);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"pm.test(\"Mensagem de sucesso no cadastro do produto\", () => {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Cadastro realizado com sucesso\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "fa7d5dfa-fa3b-4d29-b2b1-fffc3c514523",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"{{produto}}\",\r\n  \"preco\": {{preco}},\r\n  \"descricao\": \"{{descricao}}\",\r\n  \"quantidade\": {{quantidade}}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{local}}/produtos"
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar produto por ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "44b29ff6-b97f-48c2-a02e-76e740505d00",
+								"exec": [
+									"pm.test(\"Status code é 200, tem corpo e é Json\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "e2d876f5-f9ab-4209-b5f0-10fd3b0948d7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"value": "{{id_produto}}",
+								"type": "text"
+							}
+						],
+						"url": "{{local}}/produtos/{{id_produto}}"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9d879773-e77a-4f03-9113-11dd901712f0",
+								"exec": [
+									"pm.test(\"Status code é 200\", () => {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    \r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body matches string\", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"Registro excluído com sucesso\");\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"_postman_id": "c6d2aaec-9822-4cfe-b43d-3c10993fdf3a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "{{token}}",
+								"type": "text"
+							}
+						],
+						"url": "{{local}}/produtos/{{id_produto}}"
+					},
+					"response": []
+				}
+			],
+			"_postman_id": "9760d3bc-1c35-4384-83e4-bfeccf80bff6"
+		},
+		{
+			"name": "Criar Usuário",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "5182ff86-5247-4a60-a396-9915e2e92978",
+						"exec": [
+							"pm.environment.set(\"email\", pm.variables.replaceIn('{{$randomEmail}}'))"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"_postman_id": "561fad0a-fea1-4196-b725-071f65e39d3a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nome\": \"kleber\",\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{local}}/usuarios"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "7cdc8b8d-9e76-4380-9778-06b2ee5fe9a5",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "164c567f-2fc5-4751-bd24-763f6c309709",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "da9a5833-1cb7-4100-924a-e122123bbca0",
+			"key": "local",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"id": "6c951255-730e-4a07-9928-43ed998e6ab4",
+			"key": "token",
+			"value": "",
+			"type": "string",
+			"disabled": true
+		}
+	]
+}
