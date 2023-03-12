@@ -42,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"email\": \"jaime@qa.com.br\",\r\n  \"password\": \"teste\"\r\n}\r\n",
+							"raw": "{\r\n  \"email\": \"fulano@qa.com\",\r\n  \"password\": \"teste\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -317,12 +317,12 @@
 	],
 	"variable": [
 		{
-			"id": "e185696e-9b3d-4d74-9b67-8f48ba0d5114",
+			"id": "c828a725-8d37-4f43-99e4-f2b23ecd9821",
 			"key": "local",
 			"value": "http://localhost:3000"
 		},
 		{
-			"id": "efbdf807-082c-4841-8a6b-b7eedf12a828",
+			"id": "5a9f235f-3455-408a-a1c4-2a1734def17f",
 			"key": "token",
 			"value": "",
 			"disabled": true
